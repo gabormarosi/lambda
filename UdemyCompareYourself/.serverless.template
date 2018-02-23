@@ -1,0 +1,37 @@
+{
+  "AWSTemplateFormatVersion" : "2010-09-09",
+  "Transform" : [ "AWS::Serverless-2016-10-31", "AWS::CodeStar" ],
+  "Description" : null,
+  "Resources" : {
+    "PostHelloWorld" : {
+      "Type" : "AWS::Serverless::Function",
+      "Properties" : {
+        "Role" : {
+          "Fn::ImportValue" : [ "-", [ "ProjectId", "AWS::Region", "LambdaTrustRole" ] ]
+        },
+        "MemorySize" : 512,
+        "Runtime" : "java8",
+        "Description" : null,
+        "Policies" : [ ],
+        "CodeUri" : "./target/cy-1.0.0.jar",
+        "Events" : {
+          "PostEvent" : {
+            "Type" : "Api",
+            "Properties" : {
+              "Path" : "/",
+              "Method" : "post"
+            }
+          }
+        },
+        "Timeout" : 300,
+        "Handler" : "gmarosi.amazonaws.lambda.cy.LambdaFunctionHandler"
+      }
+    }
+  },
+  "Parameters" : {
+    "ProjectId" : {
+      "Type" : "String",
+      "Description" : "AWS CodeStar projectID used to associate new resources to team members"
+    }
+  }
+}
